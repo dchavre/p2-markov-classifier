@@ -123,7 +123,7 @@ See the expected output in [the details document](docs/details.md). Copy that ou
 Answer the following questions in your analysis. You'll submit your analysis as a separate PDF as a 
 separate assignment to Gradescope. Answering these questions will require you to run the driver code to 
 generate timing data and to reason about the algorithms and data structures you have implemented. 
-We will include a template file for submitting your answers.
+Here is the [template file for submitting analysis to Gradescope](https://courses.cs.duke.edu/compsci201/fall25/assign/p2-classify-analysis.docx).
 
 ### Working Together for Analysis
 
