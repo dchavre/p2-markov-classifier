@@ -1,6 +1,6 @@
-# Project 2: Classifying Markov Models, Fall 2025
+# Project 2: Classifying Markov Models, Spring 2026
 
-This is the high-level project document for Project P2-Markov-Classifying in CompSci 201 at Duke University, Fall 2025.
+This is the high-level project document for Project P2-Markov-Classifying in CompSci 201 at Duke University, Spring 2026.
 
 See [the details document](docs/details.md) for information on using Git, starting the project, 
 and more details about the project including information about the classes and concepts 
@@ -9,12 +9,8 @@ that are outlined briefly below.
 *You'll absolutely need to read the information* in the [details document](docs/details.md) to understand how the classes 
 in this project work independently and together. 
 
-This project earns engagement points and
-also earns points in the numerator of your
-total project percentage, but it is **not required**, so the denominator of the project
-percentage does **not include** these points. 
-
-You must complete this project **before** October 31 for credit.
+In some ways this is an extension of P1: Markov, but rather than creating a Markov Model to generate text, you'll create a
+Markov Model to _classify_ text.
 
 ## Introduction
 
@@ -23,24 +19,25 @@ to _generate_ text probabilistically after training on different authors. Those 
 `SimpleMarkov` and `HashMarkov` are *generative AI Markov Models*. 
 
 In this project you'll implement a new subclass of `BaseMarkov` that is
-conceptually a variant of `HashMarkov`. 
+conceptually a variant of `HashMarkov`, but actually extends `BaseMarkov`, as was the case with `HashMarkov`. 
 
 This new `ClassifyingModel` is used
-to *classify* unknown texts after training on many different authors. Your class, `ClassifyingModel`, will extend the `BaseMarkovModel` class (as classes in P1.1 and P1.2 did). You'll train multiple models on the
+to *classify* unknown texts after training on the works of an author. Your class, `ClassifyingModel`, will extend the `BaseMarkovModel` class (as classes in P1.1 and P1.2 did). 
+You'll train multiple models on the
 works of say `N` authors, each model representing a Markov Model for one of the authors, say
 M<sub>1</sub>, M<sub>2</sub>, ..., M<sub>N</sub>. Then, for a set of unknown files, 
 say U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub>, you'll find the maximum likelyhood estimate (MLE)
-for each of the `k` files that it's authored by each of the `N` authors (represented by a trained model). The largest of these MLE values will "predict" or "classify" the author of the unknown text.
+for each of the `k` files that the file is authored by each of the `N` authors (represented by a trained model). 
+The largest of these MLE values will "predict" or "classify" the author of the unknown text.
 
-**You will need to copy/paste the output of running `Classifier201` before and after memoizing as described
-below.**
 
 ### Similar code in AuthorShip.java
 
-We discussed the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
+The code in [AuthorShip.java](src/AuthorShip.java) 
 trains a single order-1 Markov Model on the works of one author. Then it
 tries to identify which one of `k` unknown files U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub> is most
-likely authored by the single author used to train the model.
+likely authored by the single author used to train the model. The code in this class will likely
+help as you develop the code in `ClassifyingModel`.
 
 In this assignment you'll create `N` Markov Models and then
 identify which of each of the `k` unknown files is most likely written by which of the `N` authors.
@@ -48,35 +45,37 @@ identify which of each of the `k` unknown files is most likely written by which 
 
 ## General Work for this project
 
-Your goal is to create a class `ClassifyingModel` and use it to train ten
-or more different models, and then use these models to classify
+Your goal is to create a class `ClassifyingModel` and use it to train 
+different models -- one for each of several authors. The code in `Classifier201.java` then uses these models to classify
 texts whose authorship is "unknown" in the sense that these texts weren't part
 of the training process.
 
 Summary:
     - Fork/Clone the project
     - Compete the implementation of `ClassifyingModel`
+    - Test your code using the JUnit testing classes.
     - Run the class `Classifier201` with different orders to predict the best
     (maximal MLE) for unknown texts to answer the analysis questions.
 
 Details about `ClassifyingModel` can be found 
-in the [details document](docs/details.md) and more information is included
+in the [details document](docs/details.md). More information is included
 below for determining correctness.
 
 ### Reading/Commenting at Start (optional, Engagement points)
 
 This assignment is clearly an extension of Project P1, but the classifying aspect
-is part of a new emphasize on AI/ML in Compsci 201 during the Fall 2025.
+is part of a new emphasize on AI/ML in Compsci 201 started during academic year (AY) 2025-2026.
 
-This new version is built for 201 in the Fall 2025 course offering and differs in *several details* from previous versions. This
+This new version is built for 201 in AY 25-26 and differs in *several details* from previous versions. This
 means that using an LLM or previous solutions may not be relevant.
 
 ## Running Driver Code
 
 The primary driver code for this assignment is located in `Classifier201.java`. You should be able to run 
 the `public static void main` method of that program: `Classifer201.java` 
-immediately after cloning the starter code, and should see something like the output shown below. The timings are not relevant, the vocabulary sizes 
-are incorrect, and the probabilities are not based on actual calculations
+immediately after cloning the starter code. You should see something like the output shown below. The timings are not relevant, the vocabulary sizes 
+are incorrect, and the probabilities are not based on actual calculations. Note that the output will change 
+if you construct a `Classifier201` object with the second parameter `false` since 
 
 ```
 data has 11 subdirs
