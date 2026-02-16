@@ -13,6 +13,7 @@ import compsci201.Ignore;
  * 
  * @author Owen Astrachan
  * @version 1.0, for Compsci 201, Fall 2025, September 25
+ * @version 2.0, Spring 2026
  */
 
 
@@ -21,13 +22,31 @@ public class Classifier201 {
     private Map<String, ClassifyingModel> myModels;  // dirname->model for dir
     private int mySize;                              // order of each model (same)
     private final double SMOOTHING = 0.1;
+    private boolean DEBUG_FLAG = false;
 
     public Classifier201(){
         this(3);
     }
+
     public Classifier201(int size){
         myModels = new HashMap<>();
         mySize = size;
+    }
+
+    public Classifier201(int size, boolean debug){
+        myModels = new HashMap<>();
+        mySize = size;
+        DEBUG_FLAG = debug;
+    }
+
+    /**
+     * helper method for debugging when private DEBUG_FLAG is true
+     * @param message
+     */
+    private void debug(String message) {
+        if (DEBUG_FLAG) {
+            System.out.print(message);
+        }
     }
 
     /** 
@@ -54,27 +73,29 @@ public class Classifier201 {
                                    .filter(path -> ! path.equals(root))
                                    .collect(Collectors.toList());
 
-            System.out.printf("%s has %d subdirs\n",dirName,dirs.size());
+            debug(String.format("%s has %d subdirs\n",dirName,dirs.size()));
             for(Path each : dirs) {
                 String trainDir = each.toAbsolutePath().toString();
                 String dName = getDirName(trainDir);
-                System.out.printf("training %14s\t",dName);
+                debug(String.format("training %14s\t",dName));
                                
-                ClassifyingModel model = new ClassifyingModel(mySize);
+                // second parameter to model constructor: true = memoize, false no memoize  
+                ClassifyingModel model = new ClassifyingModel(mySize,false);
                 model.trainDirectory(trainDir);
                 myModels.put(dName,model);
-                System.out.printf("order %d with %d unique tokens, %d tokens\n",
-                                  model.getOrder(),
-                                  model.vocabularySize(),
-                                  model.tokenSize());
+
+                
+                debug(String.format("order %d with %d unique tokens, %d tokens\n",
+                                    model.getOrder(),
+                                    model.vocabularySize(),
+                                    model.tokenSize()));
             }
         }      
     }
 
-    public void findBestMatch(Path path) throws IOException{
+    public List<Map.Entry<String,Double>> findAllMatches(Path path) throws IOException{
 
         String text = Files.readString(path);
-        String fileName = path.getFileName().toString();
         Map<String,Double> record = new HashMap<>();
 
         for(String modelName: myModels.keySet()) {
@@ -83,21 +104,14 @@ public class Classifier201 {
                                  .calculateMatchProbability(text, SMOOTHING);
             double end = System.nanoTime();
             double time = (end-start)/1e9;
-            System.out.printf("time: %1.2f for %s\n",time,modelName);
+            debug(String.format("time: %1.2f for %s\n",time,modelName));
             record.put(modelName,val);
         }
 
         // sort map entries by log likelihood, with largest first, smallest last
         ArrayList<Map.Entry<String,Double>> all = new ArrayList<>(record.entrySet());
         Collections.sort(all, Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        double max = all.get(0).getValue();
-        String best = all.get(0).getKey();
-
-        System.out.printf("*** %1.2f\t%s for %s\n",max,best,fileName);
-
-        for(int k=0; k < all.size(); k++){
-            System.out.printf("%1.2f\t%s\n",all.get(k).getValue(),all.get(k).getKey());
-        }
+        return all;
     }
 
     /**
@@ -114,9 +128,24 @@ public class Classifier201 {
                                     .collect(Collectors.toList());
 
             for(Path each: files){
-                findBestMatch(each);
+                identifyOne(each);
             }
          }
+    }
+
+    public void identifyOne(Path dirPath) throws IOException {
+        List<Map.Entry<String,Double>> list = findAllMatches(dirPath);
+        double max = list.get(0).getValue();
+        String best = list.get(0).getKey();
+        String fileName = dirPath.getFileName().toString();
+
+        System.out.printf("*** %1.2f\t%s for %s\n",max,best,fileName);
+
+        for(int k=0; k < list.size(); k++){
+            System.out.printf("%1.2f\t%s\n",list.get(k).getValue(),list.get(k).getKey());
+        }
+        double ratio = Math.exp(max - list.get(1).getValue());
+        System.out.printf("likelihood ratio: %1.2f\n",ratio);
     }
 
     /**
@@ -132,9 +161,10 @@ public class Classifier201 {
     }
 
     public static void main(String[] args) throws IOException {
-        Classifier201 classifier = new Classifier201(1); 
+        Classifier201 classifier = new Classifier201(1,true); 
         String training = "data";
         String identify = "identify";
+        //identify = "newauthors";
         classifier.traindAndIdentify(training,identify);
        
     }

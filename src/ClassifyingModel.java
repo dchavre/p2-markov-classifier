@@ -1,32 +1,28 @@
 import java.util.*;
 import java.util.regex.*;
+
 import java.io.*;
-import compsci201.Ignore;
 
 /**
- * AUTHOR: YOU, please modify
+ * @author: ADD YOUR NAME HERE 201 STUDENT
+ * @author: Owen Astrachan for Compsci 201
  */
 
 public class ClassifyingModel extends BaseMarkovModel{
 
-    // declare more needed instance variables here
-    private Map<List<String>, List<String>> myMap;
+    private HashMap<List<String>, List<String>> myMap;
+    private boolean myUseMemo;
 
     public ClassifyingModel(int size) {
+        this(size,false);
+    }
+
+    public ClassifyingModel(int size, boolean memoize) {
         super(size);
+        myUseMemo = memoize;
         myMap = new HashMap<>();
     }
 
-    public ClassifyingModel(){
-        this(2);
-    }
-
-    /**
-     * Returns the number of times token follows context in this model
-     * @param context is an N-gram, a list of myOrder strings
-     * @param token possibly follows the context in trained model
-     * @return # occurrences of token following context in trained model
-     */
     private int tokenInContextCount(List<String> context, String token) {
         int count = 0;
         for(String s : myMap.get(context)) {
@@ -45,7 +41,6 @@ public class ClassifyingModel extends BaseMarkovModel{
      * @return list of tokens
      */
 
-    @Ignore
     @Override
     public List<String> tokenize(String text){
         List<String> tokens = new ArrayList<>();
@@ -91,43 +86,43 @@ public class ClassifyingModel extends BaseMarkovModel{
      * @param smoother value used for Laplace smoothing
      * @return the normalized log probability of a match
      */
+
     public double calculateMatchProbability(String text, double smoother){
         
         List<String> padded = createTokenizedText(text);
-       
         double probTotal = 0.0;
-        for(int k=0; k < padded.size() - myModelSize; k++) {   
-            double prob = 0.5; // replace with appropriate calculation/smoothed
+        for(int k=0; k < padded.size() - myModelSize; k++) {
+            double prob = 0.5; // this will be replaced by appropriate calculations/values
             probTotal += Math.log(prob);
         }
-        return probTotal; // must be normalized before returning
+        return probTotal;  // must be normalized
     }
 
     @Override
     public void processTraining(){
-        // modify vocabulary instance variable
+        // modify instance variable to track vocabulary
         
         for(int k=0; k < myWordSequence.size()-myModelSize; k++) {
             List<String> current = myWordSequence.subList(k, k+myModelSize);
             String next = myWordSequence.get(k+myModelSize);
 
-            // update ALL instance variables appropriately
-            
-            
-            myMap.putIfAbsent(current, new ArrayList<>());
-            myMap.get(current).add(next);
+            // additional instance variables may need to be initialized
+
+
+            myMap.putIfAbsent(current,new ArrayList<>());
+            myMap.get(current).add(next);    
         }
     }
 
     public int vocabularySize(){
-        return 2; // must use instance variables appropriately
+        return 2;
     }
 
     public static void main(String[] args) throws IOException {
         ClassifyingModel mm = new ClassifyingModel(3);
         String dirName = "data/shakespeare";
         mm.trainDirectory(dirName);
-        System.out.printf("trained model for %s, vocab size = %d, tokens = %d\n",
+        System.out.printf("trained model for %s, vocab size = %d, token size = %d\n",
                           dirName,mm.vocabularySize(),mm.tokenSize());
     }
 }
