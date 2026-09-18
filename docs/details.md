@@ -1,20 +1,19 @@
-# Details for P2: Classifying Markov, Spring 2026
+# Details for P2: Classifying Markov, Fall 2026
+
+You should have already read the [README](../README.md) file to get an overview of the project. The details here are needed to explain the classes you're given, the code you'll write, and the implementation details.
 
 ## Starter Code and Using Git
-
 **_You should have installed all software (Java, Git, VS Code) before completing this project._** You can find 
-the [directions for installation here](https://coursework.cs.duke.edu/201spring26/resources-201/-/blob/main/installingSoftware.md) (including workarounds for submitting without Git if needed).
+the [directions for installation here](https://coursework.cs.duke.edu/201fall26/resources-201/-/blob/main/installingSoftware.md) (including workarounds for submitting without Git if needed).
 
 We'll be using Git and the installation of GitLab at [coursework.cs.duke.edu](https://coursework.cs.duke.edu). All code for classwork will be kept here. Git is software used for version control, and GitLab is an online repository to store code in the cloud using Git.
 
 
-**[This document details the workflow](https://coursework.cs.duke.edu/201spring26/resources-201/-/blob/main/projectWorkflow.md) for downloading the starter code for the project, updating your code on coursework using Git, and ultimately submitting to Gradescope for autograding.**  We recommend that you read and follow the directions carefully this first time working on a project! While coding, 
-we recommend that you periodically (perhaps when completing a method or small section) push your changes.
-
 ## Coding in Project P2: Markov Classifier
 
-When you fork and clone the project, **make sure you open the correct project folder in VS Code** 
-following the [This document details the workflow](https://coursework.cs.duke.edu/201spring26/resources-201/-/blob/main/projectWorkflow.md).
+For this project, you **start with the URL linked to course calendar**, TBA
+
+**[This document details the workflow](https://coursework.cs.duke.edu/201fall26/resources-201/-/blob/main/projectWorkflow.md) for downloading the starter code for the project, updating your code on coursework using Git, and ultimately submitting to Gradescope for autograding.** We recommend that you read and follow the directions carefully this first time working on a project! While coding, we recommend that you periodically (perhaps when completing a method or small section) push your changes.
 
 ## Java Background 
 
@@ -34,7 +33,7 @@ Additional  instance variables are described next.
 ### instance variables
 
 Some instance vaiables will allow you to meet correctness and
-performance criteria defined below. In the [P1:Markov-GenAI](https://coursework.cs.duke.edu/201spring26/p1-markov-spring2026) assignment you were advised to use `HashMap<List<String>,List<String>>` as an instance variable. The keys in this map are each a _context_, or an N-gram of N-tokens/words where `N` is the order of the model. The corresponding value is a list of the words/tokens that follow the key _context_. See that assignment for
+performance criteria defined below. In the [P1:Markov](https://coursework.cs.duke.edu/201fall26/p1-markov/) assignment you were advised to use `HashMap<List<String>,List<String>>` as an instance variable. The keys in this map are each a _context_, or an N-gram of N-tokens/words where `N` is the order of the model. The corresponding value is a list of the words/tokens that follow the key _context_. See that assignment for
 more details. In the code you fork/clone, this instance variable `myMap` is defined, **and is** given a value in the constructor. **You'll need additional instance variables as well.**
 
 You will need a `HashSet<String>` to store the unique words/tokens
@@ -63,7 +62,7 @@ vocabulary* and you must initialize the instance variable used for memoizing. Th
 The code you fork/clone loops over every possible context (based on `myModelSize`) and updates that context in instance
 variable `myMap` by adding the token/word that follows the context to the `ArrayList` that's the corresponding value in `myMap`.
 
-See the [details document](https://coursework.cs.duke.edu/201spring26/p1-markov-spring2026/-/blob/main/docs/details.md) for P1:HashMarkovModel for more information.
+See the [details document](https://coursework.cs.duke.edu/201fall26/p1-markov/-/blob/main/docs/details.md) for P1:HashMarkovModel for more information.
 
 ## Required public and private helper methods
 
