@@ -1,47 +1,12 @@
-# Project 2: Classifying Markov Models, Spring 2026
+# Project 2: Classifying Markov Models, Fall 2026
 
-This is the high-level project document for Project P2-Markov-Classifying in CompSci 201 at Duke University, Spring 2026.
+This is the high-level project document for Project P2-Markov-Classifying in CompSci 201 at Duke University, Fall 2026.
 
-See [the details document](docs/details.md) for information on using Git, starting the project, 
-and more details about the project including information about the classes and concepts 
-that are outlined briefly below. 
-
-*You'll absolutely need to read the information* in the [details document](docs/details.md) to understand how the classes 
-in this project work independently and together. 
+For complete project details including git, programming tasks, and analysis questions, see [the _details_ document](docs/details.md). This `README` document supplies a high-level overview of what the project is about, including early engagement points.
  
 This project builds conceptually on P1: Markov Text Generation in using the same 
 class `BaseMarkovModel`.
 
-
-## Introduction
-
-In Project P1: Markov you were asked to implement two different Markov Model classes
-to _generate_ text probabilistically after training on different authors. Those models,
-`SimpleMarkovModel` and `HashMarkovModel` are *generative AI Markov Models*. 
-
-In this project you'll implement a new subclass of `BaseMarkovModel` that is
-conceptually a variant of `HashMarkovModel`. 
-
-This new `ClassifyingModel` is used
-to *classify* unknown texts after training on many different authors. Your class, `ClassifyingModel`, will extend the `BaseMarkovModel` class (as classes in P1 did). You'll train multiple models on the
-works of say `N` authors, each model representing a Markov Model for one of the authors, say
-M<sub>1</sub>, M<sub>2</sub>, ..., M<sub>N</sub>. Then, for a set of unknown files, 
-say U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub>, you'll find the maximum likelyhood estimate (MLE)
-for each of the `k` files that it's authored by each of the `N` authors (represented by a trained model). The largest of these MLE values will "predict" or "classify" the author of the unknown text.
-
-**You will need to copy/paste the output of running the driver program `Classifier201` before and after memoizing as described
-below.**
-
-### Similar code in AuthorShip.java
-
-We discussed the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
-trains a single order-zero Markov Model on the works of one author. Then it
-tries to identify which one of `k` unknown files U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub> is most
-likely authored by the single author used to train the model.
-
-In this assignment you'll create `N` Markov Models and then
-identify which of each of the `k` unknown files is most likely written by each of the `N` authors. However,
-you'll do this using an order-1 or order-2 Markov Model rather than the order zero model in [Authorship.java](src/AuthorShip.java).
 
 
 ## General Work for this project
@@ -67,9 +32,6 @@ below for determining correctness.
 
 This assignment is clearly an extension of Project P1, but the classifying aspect
 is part of a new emphasize on AI/ML in Compsci 201 that started in academic year 2025-2026.
-
-This new version is built for 201 in the Spring 2026 course offering and differs in *several details* from previous versions. This
-means that using an LLM or previous solutions may require work, though LLMs are very good.
 
 ## Running Driver Code
 
@@ -100,24 +62,7 @@ time: 0.00 for alcott
 
 As you can see from the output the `data` folder has 11 sub-folders, one for each of 11 authors. The code in `Classifier201` then tries to match the twelve "unknown" files in the folder named `identify` using the maximum likelihood estimate code you'll complete in `ClassifyingModel`.
 
-## Programming and Testing
 
-Please see [the details document](docs/details.md) for complete information on the code you must write. As described above, you'll run the program `Classifier201` which creates many `ClassifyingModel` objects, trains
-them on 11 different author/folders, then tries to match "unknown" works against these models using
-the maximum likelihood estimate code you write. You'll complete the following methods
-in `ClassifyingModel` (each is described in detail in [the details document](docs/details.md)).
-
-  - `processTraining` partially complete, you must update vocabulary, stored in a `HashSet` instance variable.
-  - `vocabularySize` uses the `HashSet` instance variable and returns its size.
-  - `calculateMatchProbability` which uses the instance variables, a local variable, and the logic
-  described in [the details document](docs/details.md).
-
-After implementing these, you will likely be able to run `Classifier201` and see if it matches the expected output. Then you'll need to modify `tokenInContextCount` using memoization to make your program more efficient.
-
-See the expected output in [the details document](docs/details.md). Copy that output to a document you'll turn in as part of the analysis questions, and to which you can compare the more efficient, memoized version of your program.
-
-*Note: when a `Classifier201` object is created in the `main` method of that class, the second parameter determines if debugging/copious output
-is printed. Changing the value of that parameter from `true` to `false` will generate less output.*
 
 
 ## Analysis Questions
