@@ -8,6 +8,36 @@ the [directions for installation here](https://coursework.cs.duke.edu/201fall26/
 
 We'll be using Git and the installation of GitLab at [coursework.cs.duke.edu](https://coursework.cs.duke.edu). All code for classwork will be kept here. Git is software used for version control, and GitLab is an online repository to store code in the cloud using Git.
 
+## Introduction
+
+In Project P1: Markov you were asked to implement two different Markov Model classes
+to _generate_ text probabilistically after training on different authors. Those models,
+`SimpleMarkovModel` and `HashMarkovModel` are *generative AI Markov Models*. 
+
+In this project you'll implement a new subclass of `BaseMarkovModel` that is
+conceptually a variant of `HashMarkovModel`. 
+
+This new `ClassifyingModel` is used
+to *classify* unknown texts after training on many different authors. Your class, `ClassifyingModel`, will extend the `BaseMarkovModel` class (as classes in P1 did). You'll train multiple models on the
+works of say `N` authors, each model representing a Markov Model for one of the authors, say
+M<sub>1</sub>, M<sub>2</sub>, ..., M<sub>N</sub>. Then, for a set of unknown files, 
+say U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub>, you'll find the maximum likelyhood estimate (MLE)
+for each of the `k` files that it's authored by each of the `N` authors (represented by a trained model). The largest of these MLE values will "predict" or "classify" the author of the unknown text.
+
+**You will need to copy/paste the output of running the driver program `Classifier201` before and after memoizing as described
+below.**
+
+### Similar code in AuthorShip.java
+
+We discussed the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
+trains a single order-zero Markov Model on the works of one author. Then it
+tries to identify which one of `k` unknown files U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub> is most
+likely authored by the single author used to train the model.
+
+In this assignment you'll create `N` Markov Models and then
+identify which of each of the `k` unknown files is most likely written by each of the `N` authors. However,
+you'll do this using an order-1 or order-2 Markov Model rather than the order zero model in [Authorship.java](src/AuthorShip.java).
+
 
 ## Coding in Project P2: Markov Classifier
 
@@ -22,6 +52,24 @@ that extends `BaseMarkovModel`. As described below,
 you'll use concepts from the class `HashMarkovModel` that you previously wrote. If you didn't complete that assignment you'll likely benefit from the code in `ClassifyingModel` which includes a partially complete implementation that uses a `HashMap`. You'll need to complete
 `processTraining` based on the coding details you'll find below. However, the code you're given initializes the instance variable `myMap` correctly.
 
+## Programming and Testing
+
+Please see [the details document](docs/details.md) for complete information on the code you must write. As described above, you'll run the program `Classifier201` which creates many `ClassifyingModel` objects, trains
+them on 11 different author/folders, then tries to match "unknown" works against these models using
+the maximum likelihood estimate code you write. You'll complete the following methods
+in `ClassifyingModel` (each is described in detail in [the details document](docs/details.md)).
+
+  - `processTraining` partially complete, you must update vocabulary, stored in a `HashSet` instance variable.
+  - `vocabularySize` uses the `HashSet` instance variable and returns its size.
+  - `calculateMatchProbability` which uses the instance variables, a local variable, and the logic
+  described in [the details document](docs/details.md).
+
+After implementing these, you will likely be able to run `Classifier201` and see if it matches the expected output. Then you'll need to modify `tokenInContextCount` using memoization to make your program more efficient.
+
+See the expected output in [the details document](docs/details.md). Copy that output to a document you'll turn in as part of the analysis questions, and to which you can compare the more efficient, memoized version of your program.
+
+*Note: when a `Classifier201` object is created in the `main` method of that class, the second parameter determines if debugging/copious output
+is printed. Changing the value of that parameter from `true` to `false` will generate less output.*
 
 ### Constructors
 
