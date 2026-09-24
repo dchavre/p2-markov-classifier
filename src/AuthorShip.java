@@ -131,7 +131,7 @@ public class AuthorShip {
         AuthorShip analyzer = new AuthorShip();
         
         // Example folder paths - replace with your actual paths
-        String trainingFolder = "data/verne";  // Folder with Author X's known works
+        String trainingFolder = "data/proust";  // Folder with Author X's known works
         String testFolder = "identify";        // Folder with texts to analyze
         
         System.out.printf("training on %s\n",trainingFolder);
