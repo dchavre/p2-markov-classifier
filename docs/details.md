@@ -22,7 +22,7 @@ to *classify* unknown texts after training on many different authors. Your class
 works of say `N` authors, each model representing a Markov Model for one of the authors, say
 M<sub>1</sub>, M<sub>2</sub>, ..., M<sub>N</sub>. Then, for a set of unknown files, 
 say U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub>, you'll find the maximum likelyhood estimate (MLE)
-for each of the `k` files that it's authored by each of the `N` authors (represented by a trained model). The largest of these MLE values will "predict" or "classify" the author of the unknown text.
+for each of the `k` unknown files that it's authored by each of the `N` authors represented by a trained model. The largest of these MLE values will "predict" or "classify" the author of the unknown text.
 
 **You will need to copy/paste the output of running the driver program `Classifier201` before and after memoizing as described
 below.**
@@ -41,55 +41,55 @@ you'll do this using an order-1 or order-2 Markov Model rather than the order ze
 
 ## Coding in Project P2: Markov Classifier
 
-For this project, you **start with the URL linked to course calendar**, TBA
+For this project, you [**start with the URL linked to course calendar**](https://coursework.cs.duke.edu/201fall26/p2-markov-classifier).
 
 **[This document details the workflow](https://coursework.cs.duke.edu/201fall26/resources-201/-/blob/main/projectWorkflow.md) for downloading the starter code for the project, updating your code on coursework using Git, and ultimately submitting to Gradescope for autograding.** We recommend that you read and follow the directions carefully this first time working on a project! While coding, we recommend that you periodically (perhaps when completing a method or small section) push your changes.
 
 ## Java Background 
 
-Just as with P1, you'll be creating a new class `ClassifyingModel` 
+As with P1, you'll be creating a new class `ClassifyingModel` 
 that extends `BaseMarkovModel`. As described below, 
-you'll use concepts from the class `HashMarkovModel` that you previously wrote. If you didn't complete that assignment you'll likely benefit from the code in `ClassifyingModel` which includes a partially complete implementation that uses a `HashMap`. You'll need to complete
-`processTraining` based on the coding details you'll find below. However, the code you're given initializes the instance variable `myMap` correctly.
+you'll use concepts from the class `HashMarkovModel` that you previously wrote. If you didn't complete that assignment you'll likely benefit from the code in `ClassifyingModel` which includes a partially complete implementation that uses a `HashMap`. 
+
+  > You'll need to complete `processTraining` based on the coding details you'll find below. However, the code you're given initializes the instance variable `myMap` correctly.
 
 ## Programming and Testing
 
-Please see [the details document](docs/details.md) for complete information on the code you must write. As described above, you'll run the program `Classifier201` which creates many `ClassifyingModel` objects, trains
+This document has complete information on the code you must write. As described above, you'll run the program `Classifier201` which creates several `ClassifyingModel` objects, trains
 them on 11 different author/folders, then tries to match "unknown" works against these models using
 the maximum likelihood estimate code you write. You'll complete the following methods
-in `ClassifyingModel` (each is described in detail in [the details document](docs/details.md)).
+in `ClassifyingModel` (each is described in detail below.
 
   - `processTraining` partially complete, you must update vocabulary, stored in a `HashSet` instance variable.
   - `vocabularySize` uses the `HashSet` instance variable and returns its size.
   - `calculateMatchProbability` which uses the instance variables, a local variable, and the logic
-  described in [the details document](docs/details.md).
+  described below.
 
-After implementing these, you will likely be able to run `Classifier201` and see if it matches the expected output. Then you'll need to modify `tokenInContextCount` using memoization to make your program more efficient.
+After implementing these, you will likely be able to run `Classifier201` and see if it matches the expected output. **Then you'll need to modify `tokenInContextCount` using memoization to make your program more efficient.**
 
-See the expected output in [the details document](docs/details.md). Copy that output to a document you'll turn in as part of the analysis questions, and to which you can compare the more efficient, memoized version of your program.
+See the expected output below. Copy that output to a document you'll turn in as part of the analysis questions, and to which you can compare the more efficient, memoized version of your program.
 
-*Note: when a `Classifier201` object is created in the `main` method of that class, the second parameter determines if debugging/copious output
+*Note: when a `Classifier201` object is created in the `main` method, the second parameter to the constructor determines if debugging/copious output
 is printed. Changing the value of that parameter from `true` to `false` will generate less output.*
 
 ### Constructors
 
 You'll need to implement two constructors that correspond to the two constructors in `BaseMarkovModel`. These constructors are partially completed
-in the code you fork/clone, but the instance variable provided is *not* initialized and there are more instance variables needed that must be initialized in the constructor as well. You'll see that there is a boolean instance variable `myUseMemo` that defaults to `false`. When you implement _memoizing_ as a performance/speed enhancement described below, you'll construct `ClassifyingModel` objects with an explicit parameter of `true` sos that memoizing is engaged when the program runs.
+in the code you fork/clone, but the instance variable provided is *not* initialized and there are more instance variables needed that must be initialized in the constructor as well. You'll see that there is a boolean instance variable `myUseMemo` that defaults to `false`. When you implement _memoizing_ as a performance/speed enhancement described below, you'll construct `ClassifyingModel` objects with an explicit parameter of `true` so that memoizing is engaged when the program runs.
 
 Additional  instance variables are described next.
 
 ### instance variables
 
 Some instance vaiables will allow you to meet correctness and
-performance criteria defined below. In the [P1:Markov](https://coursework.cs.duke.edu/201fall26/p1-markov/) assignment you were advised to use `HashMap<List<String>,List<String>>` as an instance variable. The keys in this map are each a _context_, or an N-gram of N-tokens/words where `N` is the order of the model. The corresponding value is a list of the words/tokens that follow the key _context_. See that assignment for
-more details. In the code you fork/clone, this instance variable `myMap` is defined, **and is** given a value in the constructor. **You'll need additional instance variables as well.**
+performance criteria. In the [P1:Markov](https://coursework.cs.duke.edu/201fall26/p1-markov/) assignment you were advised to use `HashMap<List<String>,List<String>>` as an instance variable. The keys in this map are each a _context_, or an N-gram of N-tokens/words where `N` is the order of the model. The corresponding value is a list of the words/tokens that follow the key _context_. See that assignment for
+more details. In the code you fork/clone, this instance variable `myMap` is defined, **and is** given a value in the constructor. **You'll need additional instance variables as well** -- details both above and in what follows. 
 
 You will need a `HashSet<String>` to store the unique words/tokens
 that constitute a model's vocabulary (described below). To meet performance criteria after you know your model
 is correct, you'll likely need `HashMap<List<String>, Map<String,Integer>` in which each different 
 _context_ is a key, and the corresponding value is a map of each following word/token and the number of times
-the following word/token occurs. Details for this are described below. This instance variable is used when _memoizing_ and is
-*not* needed for correctness.
+the following word/token occurs. Details for this are described below. This instance variable is used when _memoizing_ and is *not* needed for correctness, but is used for efficiency.
 
 *Note that your code also has access to the `protected` instance variables
 in `BaseMarkovModel`, including `myWordSequence`.*
@@ -97,13 +97,11 @@ in `BaseMarkovModel`, including `myWordSequence`.*
 ## The processTraining() method
 
 You'll need to complete the `processTraining` method that was described in implementing `HashMarkovModel`. This method
-is called in `BaseMarkovModel` as the last line of both `trainDirectory` and `trainText`. In `HashMarkovModel` the
-code you wrote populated the instance variable that was termed `myMap` (which exists in the code you fork/clone). 
+is called in `BaseMarkovModel` as the last line of both `trainDirectory` and `trainText`. In `HashMarkovModel` the code you wrote populated the instance variable that was termed `myMap` (which exists in the code you fork/clone). 
 
 You may assume that `processTraining` is
 only called from `trainDirectory` so that the inherited instance variable `myWordSequence` has been
-filled with words/tokens. *You must add each of these words/tokens to the instance variable `HashSet<String>` that represents the model's
-vocabulary* and you must initialize the instance variable used for memoizing. The instance variable `myMap` is, however, initialized in the code you're given as the last two lines of `processTraining`. 
+filled with words/tokens. *You must add each of these words/tokens to the instance variable `HashSet<String>` that represents the model's vocabulary* and you must initialize the instance variable used for memoizing. The instance variable `myMap` is, however, initialized in the code you're given as the last two lines of `processTraining`. 
 
 ### Relevant instructions from `HashMarkovModel`
 
