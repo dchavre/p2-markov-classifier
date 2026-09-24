@@ -29,7 +29,7 @@ below.**
 
 ### Similar code in AuthorShip.java
 
-We discussed the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
+We discussed at a very high level the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
 trains a single order-zero Markov Model on the works of one author. Then it
 tries to identify which one of `k` unknown files U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub> is most
 likely authored by the single author used to train the model.
