@@ -220,15 +220,14 @@ those shown below. Please post to ED if yours are drastically different from tho
 *** -54.07      shakespeare for caesar.txt
 *** -26.24      kafka for urteil.txt
 *** -66.73      hesse for gertrude.txt
-*** -104.23     alcott for old-fashioned-girl.txt
+*** -104.27     alcott for old-fashioned-girl.txt
 *** -66.57      shakespeare for othello.txt
-*** -89.98      melville for white-jacket.txt
-*** -121.22     cbronte for shirley.tx
-*** -109.57     twain for innocents.txt
+*** -89.99      melville for white-jacket.txt
+*** -121.27     cbronte for shirley.tx
+*** -108.99     twain for innocents.txt
 *** -91.32      verne for fiveweeks-balloon.txt
 *** -115.96     dumas for dumas-story.txt
-*** -80.63      dostoevsky for gambler.txt
-*** -99.74      proust for prisonniere.txt
+*** -101.56     proust for prisonniere.txt
 
 ```
 

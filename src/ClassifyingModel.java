@@ -26,6 +26,8 @@ public class ClassifyingModel extends BaseMarkovModel{
     }
 
     private int tokenInContextCount(List<String> context, String token) {
+        if (! myMap.containsKey(context)) return 0;
+        
         int count = 0;
         for(String s : myMap.get(context)) {
             if (s.equals(token)) {
