@@ -95,15 +95,15 @@ the general flow of control are described below.
 The `text` parameter is the unkown text for which this method calculates
 the MLE for `text` compared to this trained model. The general steps are to complete the loop over every possible _context_ (a `List<String>` with `myOrder` values) and the following word/token from the unknown text stored in local variable `next`. Your code must:
 
-    - calculate the number of times the `context` occurs in the trained model, store in an appropriaely named local variable, e.g., `contextCount` (this number can be obtained from the size of the value associated with `context` key in the `myMap` instance variable of the trained model).
-    - calculate the number of times `next` follows `context` in the trained model by calling helper method `tokenInContextCount`. Store this value in an appropriately named local variable, e.g., `nextCount`
-    - use this equation to calculate an MLE probability for one context and one token: 
+  - calculate the number of times the `context` occurs in the trained model, store in an appropriaely named local variable, e.g., `contextCount` (this number can be obtained from the size of the value associated with `context` key in the `myMap` instance variable of the trained model).
+  - calculate the number of times `next` follows `context` in the trained model by calling helper method `tokenInContextCount`. Store this value in an appropriately named local variable, e.g., `nextCount`
+  - use this equation to calculate an MLE probability for one context and one token: 
     $$
     (nextCount + smoother)/(contextCount + smoother*vocabSize)
     $$
     See the similar value in [`AuthorShip.java`](../src/AuthorShip.java) for example. Note that `nextCount` is calculated by calling `tokenInContextCount` and `contextCount` is the number of times `context` 
     occurs in the trained model, which can be determined directly from `myMap`.
-    - as you loop, accumulate the sum of the log of each probability. Again see [`AuthorShip.java`](../src/AuthorShip.java) for similar code.
+  - as you loop, accumulate the sum of the log of each probability. Again see [`AuthorShip.java`](../src/AuthorShip.java) for similar code.
   - After the loop, return the _context normalized_ sum of all log-probabilities. For this you'll divide the log-sum by the number of unique contexts in the unknown text, i.e., the size of the local variable `HashSet set` that stores all the (unique) contexts from the unknown text.
 
 ### Testing and Verifying Results
