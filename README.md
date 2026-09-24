@@ -29,18 +29,30 @@ texts whose authorship is "unknown" in the sense that these texts weren't part
 of the training process.
 
 Summary:
-    - Fork/Clone the project
-    - Complete the implementation of `ClassifyingModel` with and without memoizing. Explained fully in [details document](docs/details.md).
-    - Test your implementation with the JUnit tests in `TestClassifyingModel`.
-    - Veryify results for each unknown text compared to correct results in the [details document](docs/details.md).
-    - Run the class `Classifier201` as described to predict the best (maximal MLE) for unknown texts to answer the analysis questions.
+
+  - Fork/Clone the project
+- Complete the implementation of `ClassifyingModel` with and without memoizing. Explained fully in [details document](docs/details.md).
+- Test your implementation with the JUnit tests in `TestClassifyingModel`.
+- Veryify results for each unknown text compared to correct results in the [details document](docs/details.md).
+- Run the class `Classifier201` as described to predict the best (maximal MLE) for unknown texts to answer the analysis questions.
 
 Details about `ClassifyingModel` can be found 
 in the [details document](docs/details.md) with complete details on finishing the project.
 
-### Reading code at Start (optional, Engagement points)
+## Reading code at Start (optional, Engagement points)
 
-The code in class [`Authorship.java`](src/Authorship.java) is similar to the code you'll write in `ClassifyingModel.java`. For up to 14 engagement points read that code (and for more points run it) answering the questions in [https://forms.cloud.microsoft/r/n5k9ztkCzF](https://forms.cloud.microsoft/r/n5k9ztkCzF).
+### Similar code in AuthorShip.java
+
+We discussed at a very high level the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
+trains a single order-zero Markov Model on the works of one author. Then it
+tries to identify which one of `k` unknown files U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub> is most
+likely authored by the single author used to train the model.
+
+In this assignment you'll create `N` Markov Models and then
+identify which of each of the `k` unknown files is most likely written by each of the `N` authors. However,
+you'll do this using an order-1 or order-2 Markov Model rather than the order zero model in [Authorship.java](src/AuthorShip.java).
+
+For up to 14 engagement points read that code (and for more points run it) answering the questions in [https://forms.cloud.microsoft/r/n5k9ztkCzF](https://forms.cloud.microsoft/r/n5k9ztkCzF).
 
 
 ## Submitting and Grading
