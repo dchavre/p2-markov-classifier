@@ -8,8 +8,6 @@ the [directions for installation here](https://coursework.cs.duke.edu/201fall26/
 
 We'll be using Git and the installation of GitLab at [coursework.cs.duke.edu](https://coursework.cs.duke.edu). All code for classwork will be kept here. Git is software used for version control, and GitLab is an online repository to store code in the cloud using Git.
 
-
-
 **You will need to copy/paste the output of running the driver program `Classifier201` before and after memoizing as described
 below.**
 
@@ -24,22 +22,21 @@ For this project, you [**start with the URL linked to course calendar**](https:/
 
 The primary driver code for this assignment is located in `Classifier201.java`. You should be able to run 
 the `public static void main` method of the program `Classifer201.java` 
-immediately after cloning the starter code, and should see something like the output shown below. The timings are not relevant, the vocabulary sizes 
-are incorrect, and the probabilities are not based on actual calculations
+immediately after cloning the starter code, and should see something like the output shown below. The timings are not relevant,  and the probabilities are not based on actual calculations
 
 ```
 data has 11 subdirs
-training          dumas order 1 with 2 unique tokens, 530842 tokens
-training     dostoevsky order 1 with 2 unique tokens, 955589 tokens
-training          hesse order 1 with 2 unique tokens, 186468 tokens
-training    shakespeare order 1 with 2 unique tokens, 223930 tokens
-training       melville order 1 with 2 unique tokens, 493511 tokens
-training          twain order 1 with 2 unique tokens, 607487 tokens
-training          kafka order 1 with 2 unique tokens, 137797 tokens
-training         proust order 1 with 2 unique tokens, 368899 tokens
-training         alcott order 1 with 2 unique tokens, 539696 tokens
-training          verne order 1 with 2 unique tokens, 402366 tokens
-training        cbronte order 1 with 2 unique tokens, 556642 tokens
+training          dumas order 1 with 16749 unique tokens, 530842 tokens
+training     dostoevsky order 1 with 16919 unique tokens, 955589 tokens
+training          hesse order 1 with 15189 unique tokens, 186468 tokens
+training    shakespeare order 1 with 11192 unique tokens, 223930 tokens
+training       melville order 1 with 22789 unique tokens, 493511 tokens
+training          twain order 1 with 20700 unique tokens, 607487 tokens
+training          kafka order 1 with 10887 unique tokens, 137797 tokens
+training         proust order 1 with 17579 unique tokens, 368899 tokens
+training         alcott order 1 with 15714 unique tokens, 539696 tokens
+training          verne order 1 with 16225 unique tokens, 402366 tokens
+training        cbronte order 1 with 20308 unique tokens, 556642 tokens
 time: 0.00 for proust
 time: 0.00 for hesse
 time: 0.00 for alcott
@@ -50,49 +47,27 @@ time: 0.00 for alcott
 As you can see from the output the `data` folder has 11 sub-folders, one for each of 11 authors. The code in `Classifier201` then tries to match the twelve "unknown" files in the folder named `identify` using the maximum likelihood estimate code you'll complete in `ClassifyingModel`.
 
 
-## Java Background 
-
-As with P1, you'll be creating a new class `ClassifyingModel` 
-that extends `BaseMarkovModel`. As described below, 
-you'll use concepts from the class `HashMarkovModel` that you previously wrote. If you didn't complete that assignment you'll likely benefit from the code in `ClassifyingModel` which includes a partially complete implementation that uses a `HashMap`. 
-
-  > You'll need to complete `processTraining` based on the coding details you'll find below. However, the code you're given initializes the instance variable `myMap` correctly.
-
 ## Programming and Testing
+
+### First Steps
 
 This document has complete information on the code you must write. As described above, you'll run the program `Classifier201` which creates several `ClassifyingModel` objects, trains
 them on 11 different author/folders, then tries to match "unknown" works against these models using
-the maximum likelihood estimate code you write. You'll complete the following methods
-in `ClassifyingModel` (each is described in detail below.
+the maximum likelihood estimate code you write. You'll complete the following the method
+`calculateMatchProbability` as described next, then you'll make the code run faster once it's correct.
 
-  - `processTraining` partially complete, you must update vocabulary, stored in a `HashSet` instance variable.
-  - `vocabularySize` uses the `HashSet` instance variable and returns its size.
-  - `calculateMatchProbability` which uses the instance variables, a local variable, and the logic
-  described below.
+*Note: when a `Classifier201` object is created in the `main` method, the second parameter to the constructor determines if debugging/copious output is printed. Changing the value of that parameter from `true` to `false` will generate less output.*
 
-After implementing these, you will likely be able to run `Classifier201` and see if it matches the expected output. **Then you'll need to modify `tokenInContextCount` using memoization to make your program more efficient.**
-
-See the expected output below. Copy that output to a document you'll turn in as part of the analysis questions, and to which you can compare the more efficient, memoized version of your program.
-
-*Note: when a `Classifier201` object is created in the `main` method, the second parameter to the constructor determines if debugging/copious output
-is printed. Changing the value of that parameter from `true` to `false` will generate less output.*
-
-### Constructors
+### ClassifyModel Constructors
 
 You'll need to implement two constructors that correspond to the two constructors in `BaseMarkovModel`. These constructors are partially completed
-in the code you fork/clone, but the instance variable provided is *not* initialized and there are more instance variables needed that must be initialized in the constructor as well. You'll see that there is a boolean instance variable `myUseMemo` that defaults to `false`. When you implement _memoizing_ as a performance/speed enhancement described below, you'll construct `ClassifyingModel` objects with an explicit parameter of `true` so that memoizing is engaged when the program runs.
+in the code you fork/clone but after your code runs correctly, you will add more instance variables needed that must be initialized in the constructor as well. You'll see that there is a boolean instance variable `myUseMemo` that defaults to `false`. When you implement _memoizing_ as a performance/speed enhancement described below, you'll construct `ClassifyingModel` objects with an explicit parameter of `true` so that memoizing is engaged when the program runs.
 
-Additional  instance variables are described next.
 
-### instance variables
+### Additional instance variables
 
-Some instance vaiables will allow you to meet correctness and
-performance criteria. In the [P1:Markov](https://coursework.cs.duke.edu/201fall26/p1-markov/) assignment you were advised to use `HashMap<List<String>,List<String>>` as an instance variable. The keys in this map are each a _context_, or an N-gram of N-tokens/words where `N` is the order of the model. The corresponding value is a list of the words/tokens that follow the key _context_. See that assignment for
-more details. In the code you fork/clone, this instance variable `myMap` is defined, **and is** given a value in the constructor. **You'll need additional instance variables as well** -- details both above and in what follows. 
-
-You will need a `HashSet<String>` to store the unique words/tokens
-that constitute a model's vocabulary (described below). To meet performance criteria after you know your model
-is correct, you'll likely need `HashMap<List<String>, Map<String,Integer>` in which each different 
+To meet performance criteria **after you know your model
+is correct**, you'll need an instance variable with type `HashMap<List<String>, Map<String,Integer>` in which each different 
 _context_ is a key, and the corresponding value is a map of each following word/token and the number of times
 the following word/token occurs. Details for this are described below. This instance variable is used when _memoizing_ and is *not* needed for correctness, but is used for efficiency.
 
@@ -101,30 +76,12 @@ in `BaseMarkovModel`, including `myWordSequence`.*
 
 ## The processTraining() method
 
-You'll need to complete the `processTraining` method that was described in implementing `HashMarkovModel`. This method
-is called in `BaseMarkovModel` as the last line of both `trainDirectory` and `trainText`. In `HashMarkovModel` the code you wrote populated the instance variable that was termed `myMap` (which exists in the code you fork/clone). 
-
-You may assume that `processTraining` is
-only called from `trainDirectory` so that the inherited instance variable `myWordSequence` has been
-filled with words/tokens. *You must add each of these words/tokens to the instance variable `HashSet<String>` that represents the model's vocabulary* and you must initialize the instance variable used for memoizing. The instance variable `myMap` is, however, initialized in the code you're given as the last two lines of `processTraining`. 
+This method works correctly for the purposes of correctness. When you implement _caching_ aka _memoizing_ later you will need to add code here, but for first steps it is complete.
 
 ### Relevant instructions from `HashMarkovModel`
 
 The code you fork/clone loops over every possible context (based on `myModelSize`) and updates that context in instance
-variable `myMap` by adding the token/word that follows the context to the `ArrayList` that's the corresponding value in `myMap`.
-
-See the [details document](https://coursework.cs.duke.edu/201fall26/p1-markov/-/blob/main/docs/details.md) for P1:HashMarkovModel for more information.
-
-## Required public and private helper methods
-
-You are given method headers and some code for:
-  - `vocabularySize` that returns the number of unique words/tokens in the trained model (you must implement this -- it should return the size of a set you create and populate.)
-  - `tokenInContextCount` for a given _context_ and _next_ word/token, returns the number of times `next` follows `context. You are given _slow code_ for this method, after you know it works you'll make it more efficient.
-  - `calculateMatchProbability` - returns the maximum likelihood estimate  (MLE) that some text matches this model. This is the key method in determining the MLE for a given text.
-
-Information on these helper methods can be found in the comments included
-for them in the `ClassifyingModel.java` code you fork/clone and then modify.
-
+variable `myMap` by adding the token/word that follows the context to the `ArrayList` that's the corresponding value in `myMap`. You wrote code similar to this in [P1:HashMarkovModel](https://coursework.cs.duke.edu/201fall26/p1-markov).
 
 ## Method calculateMatchProbability
 
@@ -136,13 +93,9 @@ similar and will prove useful as a model. The math behind the code you write, an
 the general flow of control are described below.
 
 The `text` parameter is the unkown text for which this method calculates
-the MLE for `text` compared to this trained model. The general steps are
+the MLE for `text` compared to this trained model. The general steps are to complete the loop over every possible _context_ (a `List<String>` with `myOrder` values) and the following word/token from the unknown text stored in local variable `next`. Your code must:
 
-  - Convert the text to a `List` of words/tokens by calling the `createTokenizedText`
-    helper method (done in the code you fork/clone)
-  - loop over every possible _context_ (a `List<String>` with `myOrder` values) and the following word/token from the unknown text. For each of these:
-    - add the context to a local `HashSet` that stores the number of unique contexts in the unknown text.
-    - calculate the number of times the `context` occurs in the trained model, store in an appropriaely named local variable, e.g., `contextCount` (this value can be obtained from the map instance variable of the trained model).
+    - calculate the number of times the `context` occurs in the trained model, store in an appropriaely named local variable, e.g., `contextCount` (this number can be obtained from the size of the value associated with `context` key in the `myMap` instance variable of the trained model).
     - calculate the number of times `next` follows `context` in the trained model by calling helper method `tokenInContextCount`, store in an appropriately named local variable, e.g., `nextCount`
     - use this equation to calculate an MLE probability for one context and one token: 
     $$
@@ -151,7 +104,7 @@ the MLE for `text` compared to this trained model. The general steps are
     See the similar value in [`AuthorShip.java`](../src/AuthorShip.java) for example. Note that `nextCount` is calculated by calling `tokenInContextCount` and `contextCount` is the number of times `context` 
     occurs in the trained model, which can be determined directly from `myMap`.
     - as you loop, accumulate the sum of the log of each probability. Again see [`AuthorShip.java`](../src/AuthorShip.java) for similar code.
-  - After the loop, return the _context normalized_ sum of all log-probabilities. For this you'll divide the log-sum by the number of unique contexts in the unknown text. You'll need to track that number in the loop, e.g., using a local `HashSet` to store all the (unique) contexts from the unknown texts.
+  - After the loop, return the _context normalized_ sum of all log-probabilities. For this you'll divide the log-sum by the number of unique contexts in the unknown text, i.e., the size of the local variable `HashSet set` that stores all the (unique) contexts from the unknown text.
 
 ### Testing and Verifying Results
 
