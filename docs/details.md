@@ -13,17 +13,6 @@ We'll be using Git and the installation of GitLab at [coursework.cs.duke.edu](ht
 **You will need to copy/paste the output of running the driver program `Classifier201` before and after memoizing as described
 below.**
 
-### Similar code in AuthorShip.java
-
-We discussed at a very high level the code in [AuthorShip.java](src/AuthorShip.java) in class. That code
-trains a single order-zero Markov Model on the works of one author. Then it
-tries to identify which one of `k` unknown files U<sub>1</sub>, U<sub>2</sub>,..., U<sub>k</sub> is most
-likely authored by the single author used to train the model.
-
-In this assignment you'll create `N` Markov Models and then
-identify which of each of the `k` unknown files is most likely written by each of the `N` authors. However,
-you'll do this using an order-1 or order-2 Markov Model rather than the order zero model in [Authorship.java](src/AuthorShip.java).
-
 
 ## Coding in Project P2: Markov Classifier
 
