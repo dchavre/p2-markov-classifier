@@ -10,7 +10,7 @@ In Project P1: Markov you were asked to implement two different Markov Model cla
 to _generate_ text probabilistically after training on different authors. Those models,
 `SimpleMarkovModel` and `HashMarkovModel` are *generative AI Markov Models*. 
 
-In this project you'll implement a new subclass of `BaseMarkovModel` that is
+In this project you'll implement a new class `ClassifyingModel` that is
 conceptually a variant of `HashMarkovModel`. 
 
 This new `ClassifyingModel` is used
