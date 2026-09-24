@@ -11,6 +11,7 @@ import java.io.*;
 public class ClassifyingModel extends BaseMarkovModel{
 
     private HashMap<List<String>, List<String>> myMap;
+    private HashSet<String> myVocabulary;
     private boolean myUseMemo;
 
     public ClassifyingModel(int size) {
@@ -21,6 +22,7 @@ public class ClassifyingModel extends BaseMarkovModel{
         super(size);
         myUseMemo = memoize;
         myMap = new HashMap<>();
+        myVocabulary = new HashSet<>();
     }
 
     private int tokenInContextCount(List<String> context, String token) {
@@ -90,8 +92,14 @@ public class ClassifyingModel extends BaseMarkovModel{
     public double calculateMatchProbability(String text, double smoother){
         
         List<String> padded = createTokenizedText(text);
+        HashSet<List<String>> set = new HashSet<>();
         double probTotal = 0.0;
+
+
         for(int k=0; k < padded.size() - myModelSize; k++) {
+            List<String> context = padded.subList(k, k+myModelSize);
+            String next = padded.get(k+myModelSize);
+            set.add(context);
             double prob = 0.5; // this will be replaced by appropriate calculations/values
             probTotal += Math.log(prob);
         }
@@ -101,12 +109,14 @@ public class ClassifyingModel extends BaseMarkovModel{
     @Override
     public void processTraining(){
         // modify instance variable to track vocabulary
+        myVocabulary.addAll(myWordSequence);
         
         for(int k=0; k < myWordSequence.size()-myModelSize; k++) {
             List<String> current = myWordSequence.subList(k, k+myModelSize);
             String next = myWordSequence.get(k+myModelSize);
 
             // additional instance variables may need to be initialized
+            // when caching is implemented
 
 
             myMap.putIfAbsent(current,new ArrayList<>());
@@ -115,7 +125,7 @@ public class ClassifyingModel extends BaseMarkovModel{
     }
 
     public int vocabularySize(){
-        return 2;
+        return myVocabulary.size();
     }
 
     public static void main(String[] args) throws IOException {
