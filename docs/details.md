@@ -49,19 +49,23 @@ As you can see from the output the `data` folder has 11 sub-folders, one for eac
 
 ## Programming and Testing
 
-### First Steps
+For the first part of this project, for the code to calculate probabilities correctly, you'll add code to the method `ClassifyingModel.calculateMatchProbability`. The code you add will call helper methods as described below, these are already implemented in the code you clone from the git repository.
+
+For the second part of the assignment, you'll make the model run more quickly quen calculating probabilities. This will require adding instance variable(s) and modifying methods as explained below.
+
+### Description of ClassifyingModel code
 
 This document has complete information on the code you must write. As described above, you'll run the program `Classifier201` which creates 11 `ClassifyingModel` objects, trains
 one on each of 11 different author/folders, then tries to match "unknown" works against these models using
-the maximum likelihood estimate code you write. You'll complete the method
-`calculateMatchProbability` as described next, then you'll make the code run faster once it's correct.
+the maximum likelihood estimate code you write. **You'll complete the method
+`calculateMatchProbability`, then you'll make the code run faster once it's correct.**
 
 *Note: when a `Classifier201` object is created in the `main` method, the second parameter to the constructor determines if debugging/copious output is printed. Changing the value of that parameter from `true` to `false` will generate less output.*
 
 ### ClassifyModel Constructors
 
 There are two constructors that correspond to the two constructors in `BaseMarkovModel`. These constructors are  completed
-in the code you fork/clone but after your code runs correctly, you will add more instance variables needed for effiiency that must be initialized in the constructor as well. You'll see that there is a boolean instance variable `myUseMemo` that defaults to `false`. When you implement _memoizing_ as a performance/speed enhancement described below, you'll construct `ClassifyingModel` objects with an explicit parameter of `true` so that memoizing is engaged when the program runs.
+in the code you fork/clone but after your code runs correctly, you will add more instance variables needed for effiiency that must be initialized in a constructor as well. You'll see that there is a boolean instance variable `myUseMemo` that defaults to `false`. When you implement _memoizing_ as a performance/speed enhancement described below, you'll construct `ClassifyingModel` objects with an explicit parameter of `true` so that memoizing is engaged when the program runs.
 
 
 ### Additional instance variables
@@ -90,10 +94,11 @@ estimate (MLE) that an unknown text matches the trained model. The
 method `calculateLogLikelihood` 
 from [`AuthorShip.java`](../src/AuthorShip.java) is
 similar and will prove useful as a model. The math behind the code you write, and
-the general flow of control are described below.
+the general flow of control are described below. Note that in `Authorship` the basic probability that a word occurs is calculated as `(# times word occurs)/(total # words)`, though this is smoothed to calculate for words with zero occurrences. The code you'll write
+in `calculateMatchProbabilities` is related, but takes a context into account since the model is *not* a zero-order Markov model as it is in `Authorship.java`.
 
 The `text` parameter is the unkown text for which this method calculates
-the MLE for `text` compared to this trained model. The general steps are to complete the loop over every possible _context_ (a `List<String>` with `myOrder` values) and the following word/token from the unknown text stored in local variable `next`. Your code must:
+the MLE for `text` compared to this trained model. You'll write code to complete the loop over every possible _context_ (a `List<String>` with `myOrder` values) and the following word/token from the unknown text stored in local variable `next`. Your code must:
 
   - calculate the number of times the `context` occurs in the trained model, store in an appropriaely named local variable, e.g., `contextCount` (this number can be obtained from the size of the value associated with `context` key in the `myMap` instance variable of the trained model).
   - calculate the number of times `next` follows `context` in the trained model by calling helper method `tokenInContextCount`. Store this value in an appropriately named local variable, e.g., `nextCount`
@@ -123,21 +128,23 @@ is shown below:
 
 ```
   private int tokenInContextCount(List<String> context, String token) {
-      int count = 0;
-      for(String s : myMap.get(context)) {
-            if (s.equals(token)) {
-                count += 1;
-            }
-      }
-      return count;
+    if (! myMap.containsKey(context)) return 0;
+
+    int count = 0;
+    for(String s : myMap.get(context)) {
+        if (s.equals(token)) {
+            count += 1;
+        }
+    }
+    return count;
   }
 ```
 
-The method `tokenInContextCount` that is part of the code you fork 
+The code above, in the code you fork,
 loops over all tokens that follow parameter `context` and thus has complexity $O(N)$ where $N$ is the total number of
 tokens in the list that follow `context`. For some authors the average
 length of these lists across all contexts is small, but for other authors
-it is large, e.g., the average length ranges from 12 to 56. When an unknown text has contexts that "hit" these longer lists, the time across all matches can be excessive. On ola's (reasonably new Mac-pro) laptop, timings for one runt to match the file `old-fashioned-girl.txt` against all authors is shown below:
+it is large, e.g., the average length ranges from 12 to 56. When an unknown text has contexts that "hit" these longer lists, the time across all matches can be excessive. On ola's (reasonably new Mac-pro) laptop, timings for one run to match the file `old-fashioned-girl.txt` against all authors is shown below:
 ```
     time: 0.82 for proust
     time: 0.57 for hesse
@@ -188,7 +195,7 @@ with code similar to (conceptually at least)
     myCache.get(context).put(token,count);
 ```
 Note that the value of `myCache.get(context)` is a map that now has
-the value of how many times `token` follows `context` stored in the map.
+the value of how many times `token` follows `context` stored in the map (your code will need to ensure there's value associated with `context` in `myCache`).
 
 Modify the method `tokenInContextCount` so that before
 the loop in the body of `tokenInContextCount` the map `myCache` is
@@ -198,7 +205,7 @@ the first time the method is called for each `context` and `token` pair, the res
 
 This improvement makes each model faster and faster when used to identify
 more and more unknown texts since some of those texts may share the
-same `context` and `token` pairs. Runs of `Classsifier201` should be much faster when you've implemented memoization.
+same `context` and `token` pairs. Runs of `Classifier201` should be much faster when you've implemented memoization.
 
 Note: You should use the instance variable `myUseCache` and only store/retrieve values from the map `myCache` if 
 `myUseCache` is true. This value is set when a `ClassifyingModel` object is created, that's near line 83 of `Classifier201` in

@@ -23,10 +23,7 @@ for each of the `k` unknown files that it's authored by each of the `N` authors 
 
 ## General Work for this project
 
-Your goal is to finish implementing the class `ClassifyingModel` and use it to train ten
-or more different models using a provided driver program. The driver uses these models to classify
-texts whose authorship is "unknown" in the sense that these texts weren't part
-of the training process.
+Your goal is to finish implementing the class `ClassifyingModel` and use it to train many different models using a provided driver program. The driver uses these models to classify texts whose authorship is "unknown" in the sense that these texts weren't part of the training process.
 
 Summary:
 
@@ -57,9 +54,7 @@ For up to 14 engagement points read that code (and for more points run it) answe
 
 ## Submitting and Grading
 
-The autograder will use the same tests that are in `TestClassifyingModel.java`. The autograder
-will *NOT* test for speed based on memoizing, but your MLE results should be the same
-regardless of whether memoizing is used.
+The autograder will use the same tests that are in `TestClassifyingModel.java`. The autograder will *NOT* test for speed based on memoizing, but your MLE results should be the same regardless of whether memoizing is used.
 
 
 
@@ -67,5 +62,5 @@ regardless of whether memoizing is used.
 
 | Section.  | points |
 |-----------|--------|
-|Analysis   |     20 |
+|Analysis   |     2 |
 |Code       |      8 |  

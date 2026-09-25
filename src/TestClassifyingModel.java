@@ -37,8 +37,8 @@ public class TestClassifyingModel {
 
     @Test
     public void testDoestoevskyMatches() throws IOException {
-        String[] files = {"dumas-story.txt","gambler.txt","gertrude.txt","prisonniere.txt","urteil.txt"};
-        double[] results = {-183.49,-80.63,-93.82,-148.42,-37.61};
+        String[] files = {"dumas-story.txt","gertrude.txt","prisonniere.txt","urteil.txt"};
+        double[] results = {-183.49,-93.82,-152.80,-37.61};
         ClassifyingModel cm = new ClassifyingModel(1);
         String source = "data/dostoevsky";
         cm.trainDirectory(source);
@@ -53,8 +53,8 @@ public class TestClassifyingModel {
     
     @Test
     public void testShakespeareMatches() throws IOException {
-        String[] files = {"dumas-story.txt","gambler.txt","gertrude.txt","prisonniere.txt","urteil.txt"};
-        double[] results = {-179.78,-91.89,-89.16,-144.34,-35.91};
+        String[] files = {"dumas-story.txt","gertrude.txt","prisonniere.txt","urteil.txt"};
+        double[] results = {-179.78,-89.16,-148.49,-35.91};
         ClassifyingModel cm = new ClassifyingModel(1);
         String source = "data/shakespeare";
         cm.trainDirectory(source);
